@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "551318257846",
+    "project_id": "notes-ed422",
+    "storage_bucket": "notes-ed422.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551318257846:android:6261aa25b3ff9ea2fd2617",
+        "android_client_info": {
+          "package_name": "the.mrsmile.notes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "551318257846-gtpqasgmjno45bgmou205qdfvvf8ditu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1pnERCOKqqIP-YkfMvirAGfszufaCFQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "551318257846-gtpqasgmjno45bgmou205qdfvvf8ditu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
