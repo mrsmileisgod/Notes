@@ -2,19 +2,16 @@ package the.mrsmile.notes
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.recycler_items.*
 import the.mrsmile.notes.databinding.RecyclerItemsBinding
 
 class RecyclerAdapter(private val items : List<Items>) : RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
 
-    class RecyclerViewHolder(private val itemsBinding: RecyclerItemsBinding) : RecyclerView.ViewHolder(itemsBinding.root){
+    class RecyclerViewHolder(itemsBinding: RecyclerItemsBinding) : RecyclerView.ViewHolder(itemsBinding.root){
 
         var title = itemsBinding.tVTitle
         var desc = itemsBinding.tVDesc

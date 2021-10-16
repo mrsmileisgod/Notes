@@ -12,6 +12,9 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-
+    </style>
+    <style name="CustomBtn">
+        <item name="android:backgroundTint">@color/constraint_layout</item>
+        <item name="cornerRadius">12dp</item>
     </style>
 </resources>

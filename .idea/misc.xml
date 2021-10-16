@@ -4,11 +4,25 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/background_nav_bar.xml" value="0.28489583333333335" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/btn_bg.xml" value="0.28489583333333335" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/constraint_layout_bg.xml" value="0.28489583333333335" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/constraint_main.xml" value="0.28489583333333335" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/contsraint_layout_bg.xml" value="0.28489583333333335" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/ic_insta.xml" value="0.28489583333333335" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/ic_redo.xml" value="0.28489583333333335" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/recycler_view_bg.xml" value="0.28489583333333335" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/search_view_bg.xml" value="0.28489583333333335" />
         <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/drawable/textview_bg.xml" value="0.28489583333333335" />
         <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/layout/activity_main.xml" value="0.26875" />
         <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/layout/activity_main2.xml" value="0.26875" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/layout/activity_search.xml" value="0.26875" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/layout/fragment_add_note.xml" value="0.26875" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/layout/fragment_feedback.xml" value="0.26875" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/layout/fragment_home.xml" value="0.26875" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/layout/fragment_search.xml" value="0.26875" />
         <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/layout/recycler_items.xml" value="0.26875" />
         <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/menu/bottom_app_bar_menu.xml" value="0.26875" />
+        <entry key="..\:/Android KOTLIN/CODE/Notes/app/src/main/res/menu/bottom_nav_view.xml" value="0.26875" />
       </map>
     </option>
   </component>
