@@ -22,6 +22,7 @@
         android:layout_height="60dp"
         android:background="@drawable/background_nav_bar"
         app:cnb_menuResource="@menu/bottom_app_bar_menu"
+        style="@style/BottomAppBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

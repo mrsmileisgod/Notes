@@ -17,4 +17,7 @@
         <item name="android:backgroundTint">@color/constraint_layout</item>
         <item name="cornerRadius">12dp</item>
     </style>
+    <style name="BottomAppBar">
+        <item name="iconTint">@color/white</item>
+    </style>
 </resources>
