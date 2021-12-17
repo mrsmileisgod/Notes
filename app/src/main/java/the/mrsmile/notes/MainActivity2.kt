@@ -30,8 +30,6 @@ class MainActivity2 : AppCompatActivity() {
                         .replace(R.id.fragment, HomeFragment()).commit()
 
                 }
-                R.id.menu_search -> supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment, SearchFragment()).commit()
 
                 R.id.menu_feedback -> supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment, FeedbackFragment()).commit()

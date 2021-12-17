@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import the.mrsmile.notes.databinding.FragmentAddNoteBinding
 import the.mrsmile.notes.databinding.FragmentFeedbackBinding
 
 class FeedbackFragment : Fragment() {
@@ -39,7 +38,6 @@ class FeedbackFragment : Fragment() {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")
 
-            Log.e("EMAIL", addresses.toString())
             putExtra(Intent.EXTRA_EMAIL, addresses)
             putExtra(Intent.EXTRA_SUBJECT, subject)
             putExtra(Intent.EXTRA_TEXT, text)

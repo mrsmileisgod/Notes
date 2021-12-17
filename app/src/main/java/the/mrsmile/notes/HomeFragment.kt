@@ -1,5 +1,8 @@
 package the.mrsmile.notes
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -16,13 +19,16 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import the.mrsmile.notes.databinding.FragmentHomeBinding
+import kotlin.properties.Delegates
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment() , RecyclerAdapter.LongClick{
 
     lateinit var recyclerView: RecyclerView
     private lateinit var binding: FragmentHomeBinding
     private lateinit var list: ArrayList<Items>
     private lateinit var databaseGet: DatabaseReference
+    private var index by Delegates.notNull<Long>()
+
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
@@ -30,8 +36,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         list = arrayListOf()
         getData()
         setRecyclerView()
@@ -94,19 +100,21 @@ class HomeFragment : Fragment() {
     private fun getData() {
 
         databaseGet = FirebaseDatabase.getInstance().getReference("notes")
-        databaseGet.addValueEventListener(object : ValueEventListener {
+        val eventListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 if (snapshot.exists()) {
                     for (noteSnapshot in snapshot.children) {
-
                         val note = noteSnapshot.getValue<Items>()
-                        Log.d("ListData", noteSnapshot.toString())
                         if (!list.contains(note)) {
-                            list.add(0, note!!)
+                            list.add( note!!)
                         }
+                        index = 9-snapshot.childrenCount
                     }
-                    recyclerView.adapter = RecyclerAdapter(list)
+                    recyclerView.adapter = RecyclerAdapter(list,this@HomeFragment)
+                }
+                else {
+                    index = 9
                 }
             }
 
@@ -114,22 +122,36 @@ class HomeFragment : Fragment() {
                 Snackbar.make(binding.root, "Data Fetching Cancelled !", Snackbar.LENGTH_SHORT)
                     .show()
             }
-        })
+        }
+        databaseGet.addValueEventListener(eventListener)
 
         databaseGet.child("notes").get().addOnCompleteListener {
             binding.progressBar.visibility = View.GONE
             binding.tVProgressBar.visibility = View.GONE
+            binding.fab.visibility = View.VISIBLE
         }
 
     }
 
-    private fun addNote(){
+    private fun addNote() {
 
-        val intent = Intent(binding.root.context,MainActivity::class.java).apply {
-            startActivity(this)
-        }
+        val intent = Intent(binding.root.context, AddNoteActivity::class.java)
+        intent.putExtra("index",index)
+        startActivity(intent)
     }
 
+    override fun onResume() {
+        super.onResume()
+        recyclerView.adapter = RecyclerAdapter(list.reversed(),this)
+    }
+
+    override fun copyItem(position: Int) {
+        val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip : ClipData = ClipData.newPlainText("Note",list[position].desc)
+        clipboard.setPrimaryClip(clip)
+        Snackbar.make(binding.root,"Copied !",Snackbar.LENGTH_SHORT).show()
+    }
 }
+
 
 

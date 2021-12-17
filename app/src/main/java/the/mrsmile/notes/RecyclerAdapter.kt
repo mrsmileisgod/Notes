@@ -1,21 +1,29 @@
 package the.mrsmile.notes
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context.CLIPBOARD_SERVICE
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import the.mrsmile.notes.databinding.RecyclerItemsBinding
 
-class RecyclerAdapter(private val items : List<Items>) : RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
+class RecyclerAdapter(private val items : List<Items> , private val listener : LongClick) : RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
 
-    class RecyclerViewHolder(itemsBinding: RecyclerItemsBinding) : RecyclerView.ViewHolder(itemsBinding.root){
+    inner class RecyclerViewHolder(itemsBinding: RecyclerItemsBinding) : RecyclerView.ViewHolder(itemsBinding.root) , View.OnLongClickListener{
 
         var title = itemsBinding.tVTitle
         var desc = itemsBinding.tVDesc
-        var btn = itemsBinding.btnCopy
+
+        override fun onLongClick(v: View?): Boolean {
+            listener.copyItem(bindingAdapterPosition)
+            return true
+        }
+        init {
+            itemsBinding.root.setOnLongClickListener(this)
+        }
+    }
+
+    interface LongClick{
+        fun copyItem(position : Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
@@ -27,14 +35,6 @@ class RecyclerAdapter(private val items : List<Items>) : RecyclerView.Adapter<Re
     val currentItem = items[position]
         holder.title.text = currentItem.title.toString()
         holder.desc.text = currentItem.desc.toString()
-
-
-        holder.btn.setOnClickListener {
-            val clipboard = it.context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            val clip : ClipData = ClipData.newPlainText("Note",holder.desc.text)
-            clipboard.setPrimaryClip(clip)
-            Snackbar.make(it,"Copied !",Snackbar.LENGTH_SHORT).show()
-        }
     }
 
 
