@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Notes</string>
     <string name="hello_blank_fragment">Blank Fragment</string>
+    <string name="owner_s_instagram">Owner\'s Instagram</string>
 </resources>

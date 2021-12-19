@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
@@ -17,18 +18,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import the.mrsmile.notes.databinding.FragmentHomeBinding
-import kotlin.properties.Delegates
 
-class HomeFragment : Fragment() , RecyclerAdapter.LongClick{
+class HomeFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var list: ArrayList<Items>
-    private lateinit var databaseGet: DatabaseReference
-    private var index by Delegates.notNull<Long>()
-
+    private lateinit var list: ArrayList<Notes>
+    private val dao = DAONotes()
+    private lateinit var adapter: RecyclerAdapter
+    private lateinit var layoutManager: LinearLayoutManager
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
@@ -36,11 +35,10 @@ class HomeFragment : Fragment() , RecyclerAdapter.LongClick{
         savedInstanceState: Bundle?
     ): View {
 
-
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        list = arrayListOf()
-        getData()
         setRecyclerView()
+        getData()
+
 
         //git button action
         binding.btnGit.setOnClickListener {
@@ -92,64 +90,112 @@ class HomeFragment : Fragment() , RecyclerAdapter.LongClick{
 
     private fun setRecyclerView() {
         recyclerView = binding.recyclerMain
-        recyclerView.layoutManager = LinearLayoutManager(binding.root.context)
+        layoutManager = LinearLayoutManager(binding.root.context)
+        recyclerView.layoutManager = layoutManager
         recyclerView.hasFixedSize()
 
     }
 
     private fun getData() {
-
-        databaseGet = FirebaseDatabase.getInstance().getReference("notes")
-        val eventListener = object : ValueEventListener {
+        dao.get().addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                val notes = ArrayList<Notes>()
 
-                if (snapshot.exists()) {
-                    for (noteSnapshot in snapshot.children) {
-                        val note = noteSnapshot.getValue<Items>()
-                        if (!list.contains(note)) {
-                            list.add( note!!)
-                        }
-                        index = 9-snapshot.childrenCount
+                for (dataSnapshot in snapshot.children) {
+                    val note = dataSnapshot.getValue(Notes::class.java)
+                    note?.setKeys(dataSnapshot.key)
+                    if (note != null) {
+                        notes.add(note)
                     }
-                    recyclerView.adapter = RecyclerAdapter(list,this@HomeFragment)
+                }
+                list = notes
+                if(notes.isEmpty()){
+                    binding.tVProgressBar.text = "Nothing to show :("
+                    binding.progressBar.visibility = View.GONE
+                    binding.fab.visibility = View.VISIBLE
+                    Log.e("IFF",notes.toString())
                 }
                 else {
-                    index = 9
+                    adapter = RecyclerAdapter()
+                    adapter.setItems(notes)
+                    recyclerView.adapter = adapter
+                    binding.progressBar.visibility = View.GONE
+                    binding.tVProgressBar.visibility = View.GONE
+                    binding.fab.visibility = View.VISIBLE
                 }
+
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Snackbar.make(binding.root, "Data Fetching Cancelled !", Snackbar.LENGTH_SHORT)
+                Snackbar.make(binding.root,"Data fetching cancelled!",Snackbar.LENGTH_SHORT)
                     .show()
             }
-        }
-        databaseGet.addValueEventListener(eventListener)
 
-        databaseGet.child("notes").get().addOnCompleteListener {
-            binding.progressBar.visibility = View.GONE
-            binding.tVProgressBar.visibility = View.GONE
-            binding.fab.visibility = View.VISIBLE
-        }
+        })
 
     }
 
     private fun addNote() {
 
         val intent = Intent(binding.root.context, AddNoteActivity::class.java)
-        intent.putExtra("index",index)
         startActivity(intent)
     }
 
-    override fun onResume() {
-        super.onResume()
-        recyclerView.adapter = RecyclerAdapter(list.reversed(),this)
+    private fun copyItem(position: Int) {
+        val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip: ClipData = ClipData.newPlainText("Note", list[position].desc)
+        clipboard.setPrimaryClip(clip)
+        Snackbar.make(binding.root, "Copied !", Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun copyItem(position: Int) {
-        val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip : ClipData = ClipData.newPlainText("Note",list[position].desc)
-        clipboard.setPrimaryClip(clip)
-        Snackbar.make(binding.root,"Copied !",Snackbar.LENGTH_SHORT).show()
+    private fun deleteItem(position: Int) {
+        val dao = DAONotes()
+
+        val list = adapter.getItems()
+        val currentItem = list[position]
+        val key = currentItem.getKeys()
+        Log.e("ActivityMain", key.toString())
+        if (key != null) {
+            dao.remove(key).addOnSuccessListener {
+                getData()
+                Snackbar.make(binding.root, "Deleted !", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    private fun updateItem(position: Int){
+
+        val listt = adapter.getItems()
+        val currentItem = listt[position]
+        val key = currentItem.getKeys()
+
+        val item = list[position]
+        val intent = Intent(activity,AddNoteActivity::class.java)
+        intent.putExtra("UPDATE",item)
+        intent.putExtra("UPDATE_KEY",key)
+        startActivity(intent)
+
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        super.onContextItemSelected(item)
+
+        when (item.itemId) {
+            1-> {
+                updateItem(item.groupId)
+            }
+            2 -> {
+                copyItem(item.groupId)
+                return true
+            }
+            3 -> {
+                deleteItem(item.groupId)
+                adapter.notifyItemRemoved(item.groupId)
+                return true
+            }
+        }
+        return true
     }
 }
 

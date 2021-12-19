@@ -1,14 +1,17 @@
 package the.mrsmile.notes
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import the.mrsmile.notes.databinding.FragmentFeedbackBinding
 
 class FeedbackFragment : Fragment() {
@@ -28,10 +31,26 @@ class FeedbackFragment : Fragment() {
             val email = arrayOf("mrsmileisgod@gmail.com")
             val subject = binding.editTextFeedbackSubject.text.toString()
             val textEmail = binding.editTextFeedback.text.toString()
-            composeEmail(email, subject, textEmail)
+            if (subject.isNotEmpty() && textEmail.isNotEmpty()) {
+                composeEmail(email, subject, textEmail)
+
+            } else {
+                closeSoftKeyboard(binding.root.context, binding.root)
+                Snackbar.make(
+                    binding.editTextFeedback,
+                    "Please fill both fields.",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
         }
 
         return binding.root
+    }
+
+    private fun closeSoftKeyboard(context: Context, v: View) {
+        val iMm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        iMm.hideSoftInputFromWindow(v.windowToken, 0)
+        v.clearFocus()
     }
 
     private fun composeEmail(addresses: Array<String>, subject: String, text: String) {

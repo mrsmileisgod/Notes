@@ -3,35 +3,51 @@ package the.mrsmile.notes
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import the.mrsmile.notes.databinding.ActivityAddNoteBinding
-import kotlin.properties.Delegates
-
+import java.io.Serializable
 
 class AddNoteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddNoteBinding
-    private lateinit var database: DatabaseReference
-    private var index by Delegates.notNull<Long>()
+    private var item: Serializable? = null
+    private var key: String? = null
+    private val dao = DAONotes()
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         binding = ActivityAddNoteBinding.inflate(layoutInflater)
-        database = Firebase.database.reference
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        index = intent.getLongExtra("index",9)
+
+
+        item = intent.getSerializableExtra("UPDATE")
+        key = intent.getStringExtra("UPDATE_KEY")
+
+        if (item != null && key != null) {
+            val noteEdit = item as Notes
+            binding.eTtitle.setText(noteEdit.title)
+            binding.eTdesc.setText(noteEdit.desc)
+        }
 
     }
 
+    private fun updateItem() {
+        val hashMap = HashMap<String, Any>()
+        hashMap["title"] = binding.eTtitle.text.toString()
+        hashMap["desc"] = binding.eTdesc.text.toString()
+        key?.let {
+            dao.update(it, hashMap)
+        }
+    }
+
     private fun writeData(title: String, desc: String) {
-        val note = Items(title, desc)
-        database.child("notes").child(index.toString()).setValue(note)
+
+        val note = Notes(title, desc)
+        val dao = DAONotes()
+        dao.add(note)
+
     }
 
     private fun getTitlee(): String {
@@ -46,21 +62,16 @@ class AddNoteActivity : AppCompatActivity() {
         super.onBackPressed()
         val title = getTitlee()
         val desc = getDesc()
-        if (title != "" && desc != "") {
-            writeData(title, desc)
 
+        if (item != null) {
+            updateItem()
         } else {
-            Snackbar.make(
-                this,
-                binding.root,
-                "Invalid Note Provided !",
-                Snackbar.LENGTH_SHORT
-            )
-                .show()
+            if (title != "" && desc != "") {
+                writeData(title, desc)
+            }
         }
-        binding.eTdesc.text = null
-        binding.eTtitle.text = null
 
     }
 }
+
 

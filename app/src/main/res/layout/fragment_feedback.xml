@@ -33,7 +33,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
             android:background="@color/white"
-            android:hint="Subject"
+            android:hint="Title"
             android:inputType="textEmailSubject"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +49,7 @@
             android:layout_marginEnd="16dp"
             android:background="@color/white"
             android:hint="Feedback"
+            android:focusable="true"
             android:inputType="textMultiLine"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,12 +58,15 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnFeedback_Submit"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
+            android:focusable="true"
             android:text="Submit"
             android:layout_marginEnd="16dp"
-            app:cornerRadius="16dp"
+            android:layout_marginStart="16dp"
+            app:cornerRadius="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editText_Feedback" />
     </androidx.constraintlayout.widget.ConstraintLayout>

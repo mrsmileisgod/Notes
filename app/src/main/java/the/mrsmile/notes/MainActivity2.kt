@@ -2,15 +2,7 @@ package the.mrsmile.notes
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import the.mrsmile.notes.databinding.ActivityMain2Binding
 
 class MainActivity2 : AppCompatActivity() {
@@ -44,5 +36,4 @@ class MainActivity2 : AppCompatActivity() {
             replace(R.id.fragment, fragment).commit()
         }
     }
-
 }
